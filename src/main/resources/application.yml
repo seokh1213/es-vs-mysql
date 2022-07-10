@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/performance
+    username: root
+    password: password
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+#  elasticsearch:
+#    uris: https://localhost:9200

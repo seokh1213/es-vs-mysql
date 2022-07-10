@@ -1,0 +1,21 @@
+{
+  "mappings": {
+    "properties": {
+      "author": {
+        "type": "text",
+        "analyzer": "simple"
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "simple"
+      },
+      "created_dt": {
+        "type": "date"
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "simple"
+      }
+    }
+  }
+}
