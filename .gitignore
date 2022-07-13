@@ -37,6 +37,6 @@ out/
 .vscode/
 
 ### Misc
+.env
 .DS_Store
-http_ca.crt
-
+*.crt
