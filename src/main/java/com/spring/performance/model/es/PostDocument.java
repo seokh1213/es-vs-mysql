@@ -1,5 +1,6 @@
 package com.spring.performance.model.es;
 
+import com.spring.performance.model.vo.PostVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +21,13 @@ public class PostDocument {
     private final String title;
     private final String content;
     private final LocalDateTime createdDt;
+
+    public static PostDocument of(PostVO postVO) {
+        return PostDocument.builder()
+                .author(postVO.getAuthor())
+                .title(postVO.getTitle())
+                .content(postVO.getContent())
+                .createdDt(postVO.getCreatedDt())
+                .build();
+    }
 }
