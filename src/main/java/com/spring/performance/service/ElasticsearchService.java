@@ -1,36 +1,30 @@
 package com.spring.performance.service;
 
-import com.spring.performance.model.es.PostDocument;
 import lombok.RequiredArgsConstructor;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
-//@Service
+@Service
 @RequiredArgsConstructor
 public class ElasticsearchService {
     private final ElasticsearchOperations operations;
 
-    public void deletePostIndex() {
-        Query query = new NativeSearchQueryBuilder().withQuery(QueryBuilders.matchAllQuery()).build();
-        String[] ids = operations.search(query, PostDocument.class)
-                .stream()
-                .map(SearchHit::getId)
-                .toArray(String[]::new);
-
-        if (ids.length == 0) {
-            return;
-        }
-
-        Query idsQuery = new NativeSearchQueryBuilder().withQuery(QueryBuilders.idsQuery().addIds(ids)).build();
-        operations.delete(idsQuery, PostDocument.class);
+    public boolean isExistsIndex(Class<?> clazz) {
+        return operations.indexOps(clazz).exists();
     }
 
-    public void createPostIndex() {
+    public boolean deleteIndex(Class<?> clazz) {
+        return operations.indexOps(clazz).delete();
+    }
 
+    public boolean createIndex(Class<?> clazz) {
+        return operations.indexOps(clazz).createWithMapping();
+    }
 
+    public <T> void saveEntityAll(List<T> entityList) {
+        operations.save(entityList);
     }
 }

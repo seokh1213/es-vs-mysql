@@ -10,8 +10,8 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 import java.time.LocalDateTime;
 
 @Document(indexName = "post")
-@Setting(settingPath = "classpath:settings.json")
-@Mapping(mappingPath = "classpath:mappings.json")
+@Setting(settingPath = "settings.json")
+@Mapping(mappingPath = "mappings.json")
 @Getter
 @Builder
 @AllArgsConstructor
