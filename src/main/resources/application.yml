@@ -3,7 +3,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/performance
+    url: jdbc:mysql://127.0.0.1:13306/performance
     username: root
     password: password
   jackson:
@@ -12,5 +12,5 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
-#  elasticsearch:
-#    uris: https://localhost:9200
+  elasticsearch:
+    uris: https://localhost:19200
