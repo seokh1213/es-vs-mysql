@@ -23,7 +23,6 @@ spring:
         enabled: true
   flyway:
     enabled: true
-    baseline-on-migrate: true
     url: jdbc:mysql://127.0.0.1:13306/performance
     user: root
     password: password
@@ -31,6 +30,3 @@ spring:
     uris: https://localhost:19200
     username: elastic
     password: "@elastic"
-logging:
-  level:
-    root: debug
