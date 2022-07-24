@@ -1,3 +1,4 @@
+-- ${flyway:timestamp}
 drop table if exists post_entity;
 create table post_entity
 (
