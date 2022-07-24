@@ -13,13 +13,4 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class MySQLController {
     private final PostEntityService postEntityService;
-
-    @GetMapping("create/post")
-    public String createPostIndex() {
-        Instant start = Instant.now();
-
-        postEntityService.insertDummyData();
-
-        return "Success, Collapsed Time(Second): " + (Instant.now().getEpochSecond() - start.getEpochSecond());
-    }
 }

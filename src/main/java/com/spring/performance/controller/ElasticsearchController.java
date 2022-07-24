@@ -17,24 +17,4 @@ public class ElasticsearchController {
     private final ElasticsearchService elasticsearchService;
     private final PostDocumentService postDocumentService;
 
-    @GetMapping("create/post")
-    public String createPostIndex() {
-        Instant start = Instant.now();
-        if(elasticsearchService.isExistsIndex(PostDocument.class)) {
-            boolean isDeleted = elasticsearchService.deleteIndex(PostDocument.class);
-            if(!isDeleted) {
-                return "fail";
-            }
-        }
-
-        boolean isSuccess = elasticsearchService.createIndex(PostDocument.class);
-        if(!isSuccess) {
-            return "fail";
-        }
-
-        postDocumentService.insertDummyData();
-
-        return "Success, Collapsed Time(Second): " + (Instant.now().getEpochSecond() - start.getEpochSecond());
-    }
-
 }
