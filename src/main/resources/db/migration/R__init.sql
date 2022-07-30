@@ -9,6 +9,11 @@ create table post_entity
     title      varchar(255)  not null
 );
 
-create fulltext index titleAndContent
+create fulltext index idx_titleAndContent
     on post_entity (title, content);
 
+create fulltext index idx_title
+    on post_entity (title);
+
+create fulltext index idx_content
+    on post_entity (content);

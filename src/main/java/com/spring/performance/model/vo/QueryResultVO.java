@@ -10,6 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class QueryResultVO {
     private final String type;
     private final String keyword;
-    private final long tookSeconds;
+    private final long tookMilliSeconds;
     private final long totalCounts;
 }

@@ -25,7 +25,9 @@ public class PerformanceController {
     @GetMapping
     public List<QueryResultVO> checkPerformance(@RequestParam String keyword) throws IOException, ExecutionException, InterruptedException {
         CompletableFuture<QueryResultVO> esFuture = postDocumentService.searchPost("ES - default config", keyword);
+        CompletableFuture<QueryResultVO> mysqlLikeFuture = postEntityService.searchPost("MySQL - like query", keyword, false);
+        CompletableFuture<QueryResultVO> mysqlIndexFuture = postEntityService.searchPost("MySQL - using index", keyword, true);
 
-        return List.of(esFuture.get());
+        return List.of(esFuture.get(), mysqlLikeFuture.get(), mysqlIndexFuture.get());
     }
 }

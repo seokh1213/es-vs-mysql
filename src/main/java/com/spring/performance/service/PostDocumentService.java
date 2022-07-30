@@ -57,6 +57,7 @@ public class PostDocumentService {
 
     @Async
     public CompletableFuture<QueryResultVO> searchPost(String name, String keyword) throws IOException {
+        log.info("ES[{}]: Start to search post document.", name);
         int MAX_SIZE = 10_000;
         SearchResponse<PostDocument> searchResponse = elasticsearchClient.search(
                 builder -> builder
@@ -66,6 +67,7 @@ public class PostDocumentService {
                         .size(MAX_SIZE),
                 PostDocument.class
         );
+        log.info("ES[{}]: Finish to search post document. Took: {}", name, searchResponse.took());
 
         assert searchResponse.hits().total() != null;
 
@@ -73,7 +75,7 @@ public class PostDocumentService {
                 QueryResultVO.builder()
                         .type(name)
                         .keyword(keyword)
-                        .tookSeconds(searchResponse.took())
+                        .tookMilliSeconds(searchResponse.took())
                         .totalCounts(searchResponse.hits().total().value())
                         .build()
         );
