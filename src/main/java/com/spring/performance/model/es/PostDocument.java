@@ -4,6 +4,8 @@ import com.spring.performance.model.vo.PostVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
@@ -14,13 +16,15 @@ import java.time.LocalDateTime;
 @Setting(settingPath = "settings.json")
 @Mapping(mappingPath = "mappings.json")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class PostDocument {
-    private final String author;
-    private final String title;
-    private final String content;
-    private final LocalDateTime createdDt;
+    private String author;
+    private String title;
+    private String content;
+    private LocalDateTime createdDt;
 
     public static PostDocument of(PostVO postVO) {
         return PostDocument.builder()

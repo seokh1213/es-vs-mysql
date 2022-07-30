@@ -1,4 +1,9 @@
 ## Elasticsearch vs MySQL
 
-#### set .env
-1. Make
+- docker 실행 및 application 실행
+
+```bash
+$ ./start.sh # create container (ES cluster 7, MySQL 8), register es cert
+$ ./gradlew build -x test
+$ ./gradlew bootRun
+```
