@@ -2,18 +2,18 @@
   "properties": {
     "author": {
       "type": "text",
-      "analyzer": "simple"
+      "analyzer": "whitespace"
     },
     "content": {
       "type": "text",
-      "analyzer": "simple"
+      "analyzer": "whitespace"
     },
     "created_dt": {
       "type": "date"
     },
     "title": {
       "type": "text",
-      "analyzer": "simple"
+      "analyzer": "whitespace"
     }
   }
 }

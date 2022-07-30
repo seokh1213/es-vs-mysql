@@ -6,13 +6,11 @@ import com.spring.performance.repository.PostRepository;
 import com.spring.performance.utils.ProcessDataUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,8 +37,7 @@ public class PostEntityService {
     }
 
 
-    @Async
-    public CompletableFuture<QueryResultVO> searchPost(String name, String keyword, boolean usingIndex) {
+    public QueryResultVO searchPost(String name, String keyword, boolean usingIndex) {
         log.info("MySQL[{}]: Start to search post entity.", name);
         long startMilliSeconds = System.currentTimeMillis();
         List<PostEntity> postEntityList;
@@ -52,13 +49,11 @@ public class PostEntityService {
         long endMilliSeconds = System.currentTimeMillis();
         log.info("MySQL[{}]: End to search post entity. Took: {}", name, endMilliSeconds - startMilliSeconds);
 
-        return CompletableFuture.completedFuture(
-                QueryResultVO.builder()
-                        .type(name)
-                        .keyword(keyword)
-                        .tookMilliSeconds(endMilliSeconds - startMilliSeconds)
-                        .totalCounts(postEntityList.size())
-                        .build()
-        );
+        return QueryResultVO.builder()
+                .type(name)
+                .keyword(keyword)
+                .tookMilliSeconds(endMilliSeconds - startMilliSeconds)
+                .totalCounts(postEntityList.size())
+                .build();
     }
 }

@@ -1,17 +1,18 @@
-version: "3"
+version: "2.2"
 
 services:
   mysql8:
     image: mysql:latest
     container_name: mysql8
     ports:
-      - 13306:3306
+      - "13306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: performance
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --innodb-ft-enable-stopword=0
     volumes:
       - mysql8:/var/lib/mysql
 

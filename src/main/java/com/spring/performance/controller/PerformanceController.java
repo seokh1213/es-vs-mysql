@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @RequestMapping("performance")
 @RestController
@@ -23,11 +21,11 @@ public class PerformanceController {
 
 
     @GetMapping
-    public List<QueryResultVO> checkPerformance(@RequestParam String keyword) throws IOException, ExecutionException, InterruptedException {
-        CompletableFuture<QueryResultVO> esFuture = postDocumentService.searchPost("ES - default config", keyword);
-        CompletableFuture<QueryResultVO> mysqlLikeFuture = postEntityService.searchPost("MySQL - like query", keyword, false);
-        CompletableFuture<QueryResultVO> mysqlIndexFuture = postEntityService.searchPost("MySQL - using index", keyword, true);
+    public List<QueryResultVO> checkPerformance(@RequestParam String keyword) throws IOException {
+        QueryResultVO esResult = postDocumentService.searchPost("ES - default config", keyword);
+        QueryResultVO mysqlLikeResult = postEntityService.searchPost("MySQL - like query", keyword, false);
+        QueryResultVO mysqlIndexResult = postEntityService.searchPost("MySQL - using index", keyword, true);
 
-        return List.of(esFuture.get(), mysqlLikeFuture.get(), mysqlIndexFuture.get());
+        return List.of(esResult, mysqlLikeResult, mysqlIndexResult);
     }
 }

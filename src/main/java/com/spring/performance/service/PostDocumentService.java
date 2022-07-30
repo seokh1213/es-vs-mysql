@@ -9,14 +9,12 @@ import com.spring.performance.model.vo.QueryResultVO;
 import com.spring.performance.utils.ProcessDataUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,9 +53,9 @@ public class PostDocumentService {
         elasticsearchService.saveEntityAll(postDocumentList);
     }
 
-    @Async
-    public CompletableFuture<QueryResultVO> searchPost(String name, String keyword) throws IOException {
+    public QueryResultVO searchPost(String name, String keyword) throws IOException {
         log.info("ES[{}]: Start to search post document.", name);
+        long startMilliSeconds = System.currentTimeMillis();
         int MAX_SIZE = 10_000;
         SearchResponse<PostDocument> searchResponse = elasticsearchClient.search(
                 builder -> builder
@@ -67,18 +65,18 @@ public class PostDocumentService {
                         .size(MAX_SIZE),
                 PostDocument.class
         );
-        log.info("ES[{}]: Finish to search post document. Took: {}", name, searchResponse.took());
+        long endMilliSeconds = System.currentTimeMillis();
+        log.info("ES[{}]: Finish to search post document. Took: {}({})", name, endMilliSeconds - startMilliSeconds, searchResponse.took());
 
         assert searchResponse.hits().total() != null;
 
-        return CompletableFuture.completedFuture(
-                QueryResultVO.builder()
-                        .type(name)
-                        .keyword(keyword)
-                        .tookMilliSeconds(searchResponse.took())
-                        .totalCounts(searchResponse.hits().total().value())
-                        .build()
-        );
+        return QueryResultVO.builder()
+                .type(name)
+                .keyword(keyword)
+                .tookMilliSeconds(endMilliSeconds - startMilliSeconds)
+                .esTookMilliSeconds(searchResponse.took())
+                .totalCounts(searchResponse.hits().total().value())
+                .build();
     }
 
     public Query titleAndContentQuery(String keyword) {
