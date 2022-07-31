@@ -6,9 +6,9 @@ import com.spring.performance.repository.PostRepository;
 import com.spring.performance.utils.ProcessDataUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,16 +20,22 @@ public class PostEntityService {
     private final ProcessDataUtils processDataUtils;
     private final PostRepository postRepository;
 
-    @PostConstruct
-    public void init() {
+    private final Flyway flyway;
+
+    public void init(int samplingCount) {
         Instant start = Instant.now();
         log.info("Start insert dummy data to MySQL");
-        insertDummyData();
+        flyway.migrate(); // execute "resources/db/migration"
+        final int chunk = 10_000;
+        for (int i = 0; i < Math.ceil(((double) samplingCount) / chunk); i++) {
+            log.info("MySQL - Insert Data {} / {}", i + 1, (int) Math.ceil(((double) samplingCount) / chunk));
+            insertDummyData(i * chunk, Math.min((i + 1) * chunk, samplingCount));
+        }
         log.info("Finished insert dummy data to MySQL, Collapsed Seconds: {}", (Instant.now().getEpochSecond() - start.getEpochSecond()));
     }
 
-    private void insertDummyData() {
-        List<PostEntity> postDocumentList = processDataUtils.getPostVOList().stream()
+    private void insertDummyData(int start, int end) {
+        List<PostEntity> postDocumentList = processDataUtils.getSamplingData(start, end).stream()
                 .map(PostEntity::of)
                 .collect(Collectors.toList());
 
@@ -40,11 +46,12 @@ public class PostEntityService {
     public QueryResultVO searchPost(String name, String keyword, boolean usingIndex) {
         log.info("MySQL[{}]: Start to search post entity.", name);
         long startMilliSeconds = System.currentTimeMillis();
-        List<PostEntity> postEntityList;
+
+        int totalCounts;
         if (usingIndex) {
-            postEntityList = postRepository.findAllByTitleIndexAndContentIndex(keyword);
+            totalCounts = postRepository.countAllByTitleIndexAndContentIndex(keyword);
         } else {
-            postEntityList = postRepository.findAllByTitleContainingOrContentContaining(keyword, keyword);
+            totalCounts = postRepository.countAllByTitleContainingOrContentContaining(keyword, keyword);
         }
         long endMilliSeconds = System.currentTimeMillis();
         log.info("MySQL[{}]: End to search post entity. Took: {}", name, endMilliSeconds - startMilliSeconds);
@@ -53,7 +60,7 @@ public class PostEntityService {
                 .type(name)
                 .keyword(keyword)
                 .tookMilliSeconds(endMilliSeconds - startMilliSeconds)
-                .totalCounts(postEntityList.size())
+                .totalCounts(totalCounts)
                 .build();
     }
 }

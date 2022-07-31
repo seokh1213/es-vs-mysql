@@ -11,7 +11,6 @@ public class QueryResultVO {
     private final String type;
     private final String keyword;
     private final long tookMilliSeconds;
-    @Builder.Default
-    private final long esTookMilliSeconds = -1;
+    private final Long esTookMilliSeconds;
     private final long totalCounts;
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -27,5 +28,20 @@ public class ProcessDataUtils {
                 dummyFile.getInputStream(),
                 objectMapper.getTypeFactory().constructCollectionType(List.class, PostVO.class)
         );
+    }
+
+    public List<PostVO> getSamplingData(int start, int end) {
+        final int length = postVOList.size();
+        List<PostVO> data = new ArrayList<>();
+
+        for (int i = 0; i < Math.ceil(((double) end - start) / length); i++) {
+            if (end - start - i * length < length) {
+                data.addAll(postVOList.subList(0, (end - start) % length));
+            } else {
+                data.addAll(postVOList);
+            }
+        }
+
+        return data;
     }
 }

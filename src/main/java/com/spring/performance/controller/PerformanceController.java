@@ -20,6 +20,20 @@ public class PerformanceController {
     private final PostEntityService postEntityService;
 
 
+    @GetMapping("/init")
+    public String initMySQLAndElasticsearch(@RequestParam int sampling) {
+        assert sampling > 0;
+
+        long start = System.currentTimeMillis();
+        postDocumentService.init(sampling);
+        long esTook = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
+        postEntityService.init(sampling);
+        long mysqlTook = System.currentTimeMillis() - start;
+
+        return "ES Took time: " + esTook + " / MySQL Took time: " + mysqlTook;
+    }
+
     @GetMapping
     public List<QueryResultVO> checkPerformance(@RequestParam String keyword) throws IOException {
         QueryResultVO esResult = postDocumentService.searchPost("ES - default config", keyword);
